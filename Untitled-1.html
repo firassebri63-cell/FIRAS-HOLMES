@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تطبيق فراس هولمز | المحقق كونان</title>
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+--primary: #e50914;
+--bg-main: #050505;
+--bg-card: #121212;
+--text-main: #ffffff;
+--text-dim: #a3a3a3;
+--accent: #1e40af;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+background-color: var(--bg-main);
+color: var(--text-main);
+overflow-x: hidden;
+scroll-behavior: smooth;
+}
+
+/* --- نظام تسجيل الدخول --- */
+#loginOverlay {
+position: fixed;
+inset: 0;
+background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+z-index: 2000;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: 0.5s;
+}
+
+.login-card {
+background: var(--bg-card);
+padding: 40px;
+border-radius: 20px;
+text-align: center;
+border: 1px solid #333;
+box-shadow: 0 0 30px rgba(229, 9, 20, 0.2);
+max-width: 400px;
+width: 90%;
+}
+
+.login-card h2 { margin-bottom: 20px; color: var(--primary); font-size: 2rem; }
+.login-input {
+width: 100%;
+padding: 12px;
+margin-bottom: 20px;
+background: #222;
+border: 1px solid #444;
+color: white;
+border-radius: 8px;
+outline: none;
+}
+
+.login-btn {
+background: var(--primary);
+color: white;
+border: none;
+padding: 12px 30px;
+border-radius: 8px;
+cursor: pointer;
+font-weight: bold;
+width: 100%;
+}
+
+/* --- شريط التنقل --- */
+nav {
+position: fixed;
+top: 0; right: 0; left: 0;
+height: 70px;
+background: rgba(0,0,0,0.8);
+backdrop-filter: blur(10px);
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 5%;
+z-index: 1000;
+border-bottom: 1px solid #222;
+}
+
+.logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
+.logo span { color: var(--primary); }
+
+.nav-links { display: flex; gap: 25px; }
+.nav-links a {
+color: var(--text-dim);
+text-decoration: none;
+font-size: 0.9rem;
+transition: 0.3s;
+cursor: pointer;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--primary); }
+
+.user-info { display: flex; align-items: center; gap: 10px; }
+.user-avatar {
+width: 35px; height: 35px;
+background: var(--primary);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-weight: bold;
+}
+
+/* --- المحتوى الرئيسي --- */
+.container { margin-top: 70px; padding: 20px 5%; }
+
+/* البانر الرئيسي */
+.hero {
+position: relative;
+height: 450px;
+border-radius: 25px;
+overflow: hidden;
+margin-bottom: 40px;
+background: url('https://images.alphacoders.com/605/605592.jpg') center/cover;
+display: flex;
+align-items: flex-end;
+padding: 40px;
+}
+
+.hero::after {
+content: '';
+position: absolute;
+inset: 0;
+background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+
+.hero-text { position: relative; z-index: 10; max-width: 600px; }
+.hero-text h1 { font-size: 3rem; margin-bottom: 15px; color: #fff; }
+.hero-text p { color: var(--text-dim); margin-bottom: 20px; line-height: 1.6; }
+
+/* الأقسام */
+.section-title {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 25px;
+}
+.section-title h2 { font-size: 1.8rem; border-right: 4px solid var(--primary); padding-right: 15px; }
+
+.search-box {
+background: #1a1a1a;
+border-radius: 50px;
+padding: 5px 20px;
+display: flex; align-items: center;
+border: 1px solid #333;
+}
+.search-box input {
+background: transparent; border: none; color: white; padding: 8px; outline: none;
+}
+
+/* شبكة الحلقات */
+.episodes-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 20px;
+}
+
+.ep-card {
+background: var(--bg-card);
+border-radius: 15px;
+overflow: hidden;
+transition: 0.4s;
+border: 1px solid #222;
+cursor: pointer;
+position: relative;
+}
+
+.ep-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+
+.ep-thumb { position: relative; height: 120px; }
+.ep-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.ep-play {
+position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+display: flex; align-items: center; justify-content: center;
+opacity: 0; transition: 0.3s;
+}
+.ep-card:hover .ep-play { opacity: 1; }
+
+.ep-info { padding: 15px; }
+.ep-info h4 { font-size: 0.9rem; margin-bottom: 5px; }
+.ep-info p { font-size: 0.75rem; color: var(--text-dim); }
+
+.fav-btn {
+position: absolute; top: 10px; left: 10px;
+background: rgba(0,0,0,0.6); border: none; color: white;
+padding: 8px; border-radius: 50%; cursor: pointer;
+}
+.fav-btn.active { color: var(--primary); }
+
+/* الفوتر */
+footer {
+text-align: center;
+padding: 50px;
+color: var(--text-dim);
+border-top: 1px solid #222;
+margin-top: 50px;
+}
+footer span { color: var(--primary); font-weight: bold; }
+
+/* إخفاء الأقسام */
+.page { display: none; }
+.page.active { display: block; }
+
+.btn-play {
+background: var(--primary);
+color: white;
+padding: 10px 25px;
+border-radius: 50px;
+text-decoration: none;
+font-weight: bold;
+display: inline-block;
+}
+</style>
+</head>
+<body>
+
+<!-- شاشة الدخول -->
+<div id="loginOverlay">
+<div class="login-card">
+<h2>مرحباً يا محقق</h2>
+<p style="margin-bottom: 20px; color: #888;">أدخل اسمك للدخول إلى عالم كونان</p>
+<input type="text" id="nameInput" class="login-input" placeholder="اسمك هنا (مثلاً: Firas)" value="Firas">
+<button class="login-btn" onclick="login()">دخول</button>
+</div>
+</div>
+
+<!-- شريط التنقل -->
+<nav>
+<div class="logo">FIRAS<span>HOLMES</span></div>
+<div class="nav-links">
+<a onclick="showPage('home')" id="homeLink" class="active">الرئيسية</a>
+<a onclick="showPage('episodes')">الحلقات</a>
+<a onclick="showPage('favorites')">المفضلات</a>
+</div>
+<div class="user-info">
+<span id="welcomeName">Firas Holmes</span>
+<div class="user-avatar" id="avatarLetter">F</div>
+</div>
+</nav>
+
+<div class="container">
+<!-- صفحة الرئيسية -->
+<div id="homePage" class="page active">
+<div class="hero">
+<div class="hero-text">
+<h1>المحقق كونان</h1>
+<p>أهلاً بك يا فراس في النسخة المثالية. تصفح أكثر من 1100 حلقة من الغموض والإثارة، وتابع رحلة سينشي كودو لاستعادة جسده وكشف المنظمة السوداء.</p>
+<a href="#" class="btn-play" onclick="showPage('episodes')"><i class="fas fa-play"></i> ابدأ المشاهدة</a>
+</div>
+</div>
+
+<div class="section-title">
+<h2>حلقات مميزة لك</h2>
+</div>
+<div class="episodes-grid" id="featuredGrid">
+<!-- جاري التحميل... -->
+</div>
+</div>
+
+<!-- صفحة الحلقات -->
+<div id="episodesPage" class="page">
+<div class="section-title">
+<h2>أرشيف الحلقات (1-1100)</h2>
+<div class="search-box">
+<i class="fas fa-search" style="color: #555;"></i>
+<input type="text" id="searchInput" placeholder="بحث برقم الحلقة..." onkeyup="searchEpisodes()">
+</div>
+</div>
+<div class="episodes-grid" id="allEpisodesGrid">
+<!-- سيتم توليد الحلقات برمجياً -->
+</div>
+</div>
+
+<!-- صفحة المفضلات -->
+<div id="favoritesPage" class="page">
+<div class="section-title">
+<h2>مكتبة فراس المفضلة</h2>
+</div>
+<div class="episodes-grid" id="favoritesGrid">
+<p style="color: #555; grid-column: 1/-1; text-align: center;">لا يوجد حلقات في مفضلتك بعد يا فراس.</p>
+</div>
+</div>
+
+</div>
+
+<footer>
+<p>تم التصميم والبرمجة خصيصاً لـ <span>Firas Holmes</span> &copy; 2024</p>
+</footer>
+
+<script>
+let currentUser = "Firas";
+let favorites = [];
+
+function login() {
+const input = document.getElementById('nameInput').value;
+if(input) {
+currentUser = input;
+document.getElementById('welcomeName').innerText = currentUser;
+document.getElementById('avatarLetter').innerText = currentUser[0].toUpperCase();
+document.getElementById('loginOverlay').style.opacity = '0';
+setTimeout(() => {
+document.getElementById('loginOverlay').style.display = 'none';
+}, 500);
+}
+}
+
+function showPage(pageId) {
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+
+document.getElementById(pageId + 'Page').classList.add('active');
+if(pageId === 'home') document.getElementById('homeLink').classList.add('active');
+
+window.scrollTo(0,0);
+}
+
+// توليد الحلقات
+function generateEpisodes() {
+const featuredGrid = document.getElementById('featuredGrid');
+const allGrid = document.getElementById('allEpisodesGrid');
+
+allGrid.innerHTML = '';
+featuredGrid.innerHTML = '';
+
+for(let i = 1; i <= 100; i++) {
+const card = createCard(i);
+allGrid.appendChild(card);
+
+if(i <= 5) {
+featuredGrid.appendChild(createCard(i));
+}
+}
+}
+
+function createCard(id) {
+const div = document.createElement('div');
+div.className = 'ep-card';
+div.setAttribute('data-id', id);
+
+div.innerHTML = `
+<div class="ep-thumb">
+<img src="https://picsum.photos/seed/conan${id}/300/160" alt="الحلقة ${id}">
+<div class="ep-play"><i class="fas fa-play fa-2x"></i></div>
+<button class="fav-btn ${favorites.includes(id) ? 'active' : ''}" onclick="toggleFav(event, ${id})">
+<i class="fas fa-heart"></i>
+</button>
+</div>
+<div class="ep-info">
+<h4>الحلقة ${id}</h4>
+<p>قضية غامضة جديدة للمحقق فراس</p>
+</div>
+`;
+return div;
+}
+
+function toggleFav(event, id) {
+event.stopPropagation();
+const index = favorites.indexOf(id);
+if(index === -1) {
+favorites.push(id);
+event.currentTarget.classList.add('active');
+} else {
+favorites.splice(index, 1);
+event.currentTarget.classList.remove('active');
+}
+updateFavoritesGrid();
+}
+
+function updateFavoritesGrid() {
+const grid = document.getElementById('favoritesGrid');
+grid.innerHTML = '';
+if(favorites.length === 0) {
+grid.innerHTML = '<p style="color: #555; grid-column: 1/-1; text-align: center;">لا يوجد حلقات في مفضلتك بعد يا فراس.</p>';
+return;
+}
+favorites.forEach(id => {
+grid.appendChild(createCard(id));
+});
+}
+
+function searchEpisodes() {
+const val = document.getElementById('searchInput').value;
+const cards = document.querySelectorAll('#allEpisodesGrid .ep-card');
+cards.forEach(card => {
+const id = card.getAttribute('data-id');
+if(id.includes(val)) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+}
+
+// تشغيل عند التحميل
+window.onload = generateEpisodes;
+</script>
+</body>
+</html>
