@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIRAS HOLMES | عالم الغموض</title>
+<!-- استيراد الخطوط والأيقونات -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary: #e50914;
+--accent: #b20710;
+--bg: #0a0a0b;
+--card-bg: #141416;
+--text: #ffffff;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Cairo', sans-serif;
+}
+
+body {
+background-color: var(--bg);
+color: var(--text);
+overflow-x: hidden;
+}
+
+/* تأثير الدخان والبرق في الخلفية */
+.background-effect {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: radial-gradient(circle at 50% 50%, #1a1a1c 0%, #050505 100%);
+z-index: -1;
+}
+
+/* البانر العلوي السينمائي */
+.hero {
+position: relative;
+height: 100vh;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+background: linear-gradient(to top, var(--bg), transparent 50%),
+url('https://images8.alphacoders.com/605/605592.jpg') center/cover no-repeat;
+padding: 20px;
+}
+
+.hero-content {
+z-index: 10;
+max-width: 800px;
+animation: fadeInDown 1.5s ease;
+}
+
+.hero-content h1 {
+font-size: clamp(3rem, 10vw, 6rem);
+font-weight: 900;
+text-transform: uppercase;
+letter-spacing: 5px;
+text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+margin-bottom: 10px;
+}
+
+.hero-content h1 span { color: var(--primary); }
+
+.hero-content p {
+font-size: 1.2rem;
+color: #ccc;
+margin-bottom: 30px;
+letter-spacing: 1px;
+}
+
+/* زر التشغيل الخرافي */
+.btn-main {
+padding: 15px 40px;
+background: var(--primary);
+color: white;
+text-decoration: none;
+border-radius: 50px;
+font-weight: bold;
+font-size: 1.1rem;
+transition: 0.4s;
+display: inline-flex;
+align-items: center;
+gap: 10px;
+box-shadow: 0 0 30px rgba(229, 9, 20, 0.4);
+}
+
+.btn-main:hover {
+background: white;
+color: black;
+transform: scale(1.1) rotate(-2deg);
+}
+
+/* قائمة الحلقات - شبكة احترافية */
+.episodes-section {
+padding: 100px 5%;
+}
+
+.section-title {
+font-size: 2.5rem;
+margin-bottom: 50px;
+position: relative;
+display: inline-block;
+}
+
+.section-title::after {
+content: '';
+position: absolute;
+bottom: -10px; right: 0;
+width: 60%; height: 5px;
+background: var(--primary);
+}
+
+.episodes-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+gap: 30px;
+}
+
+/* تصميم بطاقة الحلقة الخرافي */
+.ep-card {
+background: var(--card-bg);
+border-radius: 20px;
+overflow: hidden;
+position: relative;
+transition: 0.5s;
+border: 1px solid rgba(255,255,255,0.05);
+cursor: pointer;
+}
+
+.ep-card:hover {
+transform: translateY(-15px) scale(1.03);
+border-color: var(--primary);
+box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.ep-thumbnail {
+position: relative;
+height: 180px;
+overflow: hidden;
+}
+
+.ep-thumbnail img {
+width: 100%; height: 100%; object-fit: cover;
+transition: 0.5s;
+}
+
+.ep-card:hover .ep-thumbnail img { transform: scale(1.1); }
+
+.ep-play-overlay {
+position: absolute; inset: 0;
+background: rgba(229, 9, 20, 0.4);
+display: flex; align-items: center; justify-content: center;
+opacity: 0; transition: 0.3s;
+}
+
+.ep-card:hover .ep-play-overlay { opacity: 1; }
+
+/* صورة كونان أمام الحلقة */
+.conan-icon {
+position: absolute;
+bottom: -25px; left: 20px;
+width: 70px; height: 70px;
+border-radius: 50%;
+border: 4px solid var(--card-bg);
+z-index: 5;
+box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+background: #fff;
+}
+
+.ep-info {
+padding: 35px 20px 20px;
+}
+
+.ep-info h3 { font-size: 1.2rem; margin-bottom: 10px; }
+.ep-info p { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+
+.ep-meta {
+display: flex; justify-content: space-between;
+font-size: 0.8rem; color: var(--primary); font-weight: bold;
+}
+
+/* فوتر احترافي */
+footer {
+background: #050505;
+padding: 60px 20px;
+text-align: center;
+border-top: 1px solid #1a1a1a;
+}
+
+footer .firas-badge {
+background: var(--primary);
+padding: 5px 20px;
+border-radius: 20px;
+font-weight: 900;
+margin-bottom: 20px;
+display: inline-block;
+}
+
+@keyframes fadeInDown {
+from { opacity: 0; transform: translateY(-30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* نافذة المشاهدة */
+.modal {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.95);
+display: none; align-items: center; justify-content: center;
+z-index: 1000; padding: 20px;
+}
+
+.modal-content {
+background: #111;
+width: 100%; max-width: 800px;
+border-radius: 30px;
+overflow: hidden;
+border: 1px solid var(--primary);
+position: relative;
+}
+
+.close-modal {
+position: absolute; top: 20px; right: 20px;
+font-size: 2rem; cursor: pointer; color: white;
+}
+</style>
+</head>
+<body>
+
+<div class="background-effect"></div>
+
+<!-- قسم الهيرو الرئيسي -->
+<div class="hero">
+<div class="hero-content">
+<h1>FIRAS <span>HOLMES</span></h1>
+<p>أهلاً بك في القاعدة السرية للمحقق فراس. الحقيقة دائماً واحدة!</p>
+<a href="#episodes" class="btn-main">
+<i class="fas fa-play"></i> استكشاف الحلقات
+</a>
+</div>
+</div>
+
+<!-- قسم الحلقات -->
+<div class="episodes-section" id="episodes">
+<h2 class="section-title">أرشيف القضايا (1-1100)</h2>
+
+<div class="episodes-grid" id="grid">
+<!-- سيتم توليد الحلقات برمجياً -->
+</div>
+</div>
+
+<!-- مودال المشاهدة -->
+<div class="modal" id="modal">
+<span class="close-modal" onclick="closeModal()">&times;</span>
+<div class="modal-content">
+<div style="aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center;">
+<div style="text-align: center;">
+<i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--primary); margin-bottom: 20px;"></i>
+<h3>جاري فك تشفير القضية للمحقق فراس...</h3>
+</div>
+</div>
+<div style="padding: 30px;">
+<h2 id="modalTitle">اسم الحلقة</h2>
+<p style="color: #666; margin-top: 10px;">أنت تشاهد الآن من سيرفر فراس الخاص وبدقة عالية 4K.</p>
+</div>
+</div>
+</div>
+
+<footer>
+<div class="firas-badge">المحقق فراس هولمز</div>
+<p>موقع رسمي مصمم خصيصاً لعشاق كونان &copy; 2024</p>
+<div style="margin-top: 20px; font-size: 1.5rem; gap: 20px; display: flex; justify-content: center;">
+<i class="fab fa-instagram hover:text-red-600"></i>
+<i class="fab fa-twitter hover:text-red-600"></i>
+<i class="fab fa-youtube hover:text-red-600"></i>
+</div>
+</footer>
+
+<script>
+const grid = document.getElementById('grid');
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+// الروابط العالمية للصور لكي تعمل في جوجل
+const CONAN_AVATAR = "https://i.pinimg.com/originals/f3/90/1d/f3901d7350f5884e937d5718f9e0136d.jpg";
+
+// توليد الحلقات
+function generateEpisodes() {
+for (let i = 1; i <= 24; i++) {
+const card = document.createElement('div');
+card.className = 'ep-card';
+card.onclick = () => openModal(i);
+
+card.innerHTML = `
+<div class="ep-thumbnail">
+<img src="https://picsum.photos/seed/conan${i+50}/500/300" alt="قضية ${i}">
+<div class="ep-play-overlay">
+<i class="fas fa-play-circle fa-4x"></i>
+</div>
+<img src="${CONAN_AVATAR}" class="conan-icon" alt="Conan">
+</div>
+<div class="ep-info">
+<h3>الحلقة رقم ${i}: قضية المحقق فراس</h3>
+<p>هل سينجح كونان في كشف غموض هذه القضية المعقدة؟ الحقيقة تقترب...</p>
+<div class="ep-meta">
+<span><i class="far fa-clock"></i> 24 دقيقة</span>
+<span><i class="fas fa-star"></i> 9.8</span>
+</div>
+</div>
+`;
+grid.appendChild(card);
+}
+}
+
+function openModal(id) {
+modalTitle.innerText = `الحلقة رقم ${id}: لغز فراس المحير`;
+modal.style.display = 'flex';
+document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+modal.style.display = 'none';
+document.body.style.overflow = 'auto';
+}
+
+// تشغيل توليد الحلقات عند التحميل
+window.onload = generateEpisodes;
+</script>
+</body>
+</html>
